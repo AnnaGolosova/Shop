@@ -247,6 +247,8 @@ namespace Shop.Controllers
         [HttpPost]
         public ActionResult LoadCatalogOfItems(HttpPostedFileBase file)
         {
+            List<Item> list = new List<Item>();
+
             Excel.Application newApp = new Excel.Application();
             Excel.Workbook xlsBook = null;
             try
@@ -265,6 +267,8 @@ namespace Shop.Controllers
                     string description = xlRange.Cells.Item[i][4].Value;
                     string image = xlRange.Cells.Item[i][5].Value;
 
+                    if (String.Compare(partNumber, "") == 0)
+                        break;
 
 
                 }
