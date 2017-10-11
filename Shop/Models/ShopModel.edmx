@@ -1,0 +1,730 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище UniversalshopModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CategoriesLink">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="parentId" Type="int" Nullable="false" />
+          <Property Name="childId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Delivery">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DetailsLink">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="detailsValueId" Type="int" Nullable="false" />
+          <Property Name="itemId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DetailsType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DetailsValue">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="detailsTypeId" Type="int" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="partNumber" Type="int" Nullable="false" />
+          <Property Name="categoryId" Type="int" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="image" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="nvarchar" MaxLength="128" />
+          <Property Name="itemId" Type="int" />
+          <Property Name="date" Type="date" />
+          <Property Name="price" Type="float" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="deliveryId" Type="int" Nullable="false" />
+          <Property Name="state" Type="int" />
+          <Property Name="supplierTitle" Type="nvarchar(max)" />
+          <Property Name="supplierAddress" Type="nvarchar(max)" />
+          <Property Name="partNumber" Type="int" />
+          <Property Name="supplierCaption" Type="nvarchar(max)" />
+          <Property Name="itemTitle" Type="nvarchar(max)" />
+          <Property Name="itemImage" Type="nvarchar(max)" />
+          <Property Name="count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Price">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="partNumber" Type="int" Nullable="false" />
+          <Property Name="supplierId" Type="int" Nullable="false" />
+          <Property Name="price" Type="float" Nullable="false" />
+          <Property Name="count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="caption" Type="nvarchar(max)" />
+          <Property Name="address" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="itemId" Type="int" />
+          <Property Name="userId" Type="nvarchar" MaxLength="128" />
+          <Property Name="date" Type="date" />
+        </EntityType>
+        <Association Name="FK_CategoriesLink_ToCategoryChild">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoriesLink" Type="Self.CategoriesLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CategoriesLink">
+              <PropertyRef Name="childId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoriesLink_ToCategoryParent">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoriesLink" Type="Self.CategoriesLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CategoriesLink">
+              <PropertyRef Name="parentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsLink_ToDetailsVflue">
+          <End Role="DetailsValue" Type="Self.DetailsValue" Multiplicity="1" />
+          <End Role="DetailsLink" Type="Self.DetailsLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetailsValue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsLink">
+              <PropertyRef Name="detailsValueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsLink_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="1" />
+          <End Role="DetailsLink" Type="Self.DetailsLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsLink">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsValue_ToDetailsType">
+          <End Role="DetailsType" Type="Self.DetailsType" Multiplicity="1" />
+          <End Role="DetailsValue" Type="Self.DetailsValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetailsType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsValue">
+              <PropertyRef Name="detailsTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ToCategory">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ToDelivery">
+          <End Role="Delivery" Type="Self.Delivery" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Delivery">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="deliveryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Price_ToSupplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Price">
+              <PropertyRef Name="supplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Visit_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="Visit" Type="Self.Visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Visit">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище UniversalshopModelContainer">
+          <EntitySet Name="CategoriesLink" EntityType="Self.CategoriesLink" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Delivery" EntityType="Self.Delivery" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetailsLink" EntityType="Self.DetailsLink" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetailsType" EntityType="Self.DetailsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetailsValue" EntityType="Self.DetailsValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Price" EntityType="Self.Price" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Visit" EntityType="Self.Visit" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CategoriesLink_ToCategoryChild" Association="Self.FK_CategoriesLink_ToCategoryChild">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoriesLink" EntitySet="CategoriesLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoriesLink_ToCategoryParent" Association="Self.FK_CategoriesLink_ToCategoryParent">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoriesLink" EntitySet="CategoriesLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsLink_ToDetailsVflue" Association="Self.FK_DetailsLink_ToDetailsVflue">
+            <End Role="DetailsValue" EntitySet="DetailsValue" />
+            <End Role="DetailsLink" EntitySet="DetailsLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsLink_ToItem" Association="Self.FK_DetailsLink_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="DetailsLink" EntitySet="DetailsLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsValue_ToDetailsType" Association="Self.FK_DetailsValue_ToDetailsType">
+            <End Role="DetailsType" EntitySet="DetailsType" />
+            <End Role="DetailsValue" EntitySet="DetailsValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ToCategory" Association="Self.FK_Item_ToCategory">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ToDelivery" Association="Self.FK_Order_ToDelivery">
+            <End Role="Delivery" EntitySet="Delivery" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ToItem" Association="Self.FK_Order_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_ToSupplier" Association="Self.FK_Price_ToSupplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Price" EntitySet="Price" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Visit_ToItem" Association="Self.FK_Visit_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="Visit" EntitySet="Visit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UniversalshopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CategoriesLink">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="parentId" Type="Int32" Nullable="false" />
+          <Property Name="childId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Child" Relationship="Self.FK_CategoriesLink_ToCategoryChild" FromRole="CategoriesLink" ToRole="Category" />
+          <NavigationProperty Name="Parent" Relationship="Self.FK_CategoriesLink_ToCategoryParent" FromRole="CategoriesLink" ToRole="Category" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CategoriesLink" Relationship="Self.FK_CategoriesLink_ToCategoryChild" FromRole="Category" ToRole="CategoriesLink" />
+          <NavigationProperty Name="CategoriesLink1" Relationship="Self.FK_CategoriesLink_ToCategoryParent" FromRole="Category" ToRole="CategoriesLink" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Item_ToCategory" FromRole="Category" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Delivery">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_ToDelivery" FromRole="Delivery" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="DetailsLink">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="detailsValueId" Type="Int32" Nullable="false" />
+          <Property Name="itemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DetailsValue" Relationship="Self.FK_DetailsLink_ToDetailsVflue" FromRole="DetailsLink" ToRole="DetailsValue" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_DetailsLink_ToItem" FromRole="DetailsLink" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="DetailsType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="DetailsValue" Relationship="Self.FK_DetailsValue_ToDetailsType" FromRole="DetailsType" ToRole="DetailsValue" />
+        </EntityType>
+        <EntityType Name="DetailsValue">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="detailsTypeId" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="DetailsLink" Relationship="Self.FK_DetailsLink_ToDetailsVflue" FromRole="DetailsValue" ToRole="DetailsLink" />
+          <NavigationProperty Name="DetailsType" Relationship="Self.FK_DetailsValue_ToDetailsType" FromRole="DetailsValue" ToRole="DetailsType" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="partNumber" Type="Int32" Nullable="false" />
+          <Property Name="categoryId" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Item_ToCategory" FromRole="Item" ToRole="Category" />
+          <NavigationProperty Name="DetailsLink" Relationship="Self.FK_DetailsLink_ToItem" FromRole="Item" ToRole="DetailsLink" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_ToItem" FromRole="Item" ToRole="Order" />
+          <NavigationProperty Name="Visit" Relationship="Self.FK_Visit_ToItem" FromRole="Item" ToRole="Visit" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="itemId" Type="Int32" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="price" Type="Double" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="deliveryId" Type="Int32" Nullable="false" />
+          <Property Name="state" Type="Int32" />
+          <Property Name="supplierTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="supplierAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="partNumber" Type="Int32" />
+          <Property Name="supplierCaption" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="itemTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="itemImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Delivery" Relationship="Self.FK_Order_ToDelivery" FromRole="Order" ToRole="Delivery" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Order_ToItem" FromRole="Order" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Price">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="partNumber" Type="Int32" Nullable="false" />
+          <Property Name="supplierId" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Double" Nullable="false" />
+          <Property Name="count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_Price_ToSupplier" FromRole="Price" ToRole="Supplier" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="caption" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Price" Relationship="Self.FK_Price_ToSupplier" FromRole="Supplier" ToRole="Price" />
+        </EntityType>
+        <EntityType Name="Visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="itemId" Type="Int32" />
+          <Property Name="userId" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_Visit_ToItem" FromRole="Visit" ToRole="Item" />
+        </EntityType>
+        <Association Name="FK_CategoriesLink_ToCategoryChild">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoriesLink" Type="Self.CategoriesLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CategoriesLink">
+              <PropertyRef Name="childId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoriesLink_ToCategoryParent">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="CategoriesLink" Type="Self.CategoriesLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CategoriesLink">
+              <PropertyRef Name="parentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ToCategory">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ToDelivery">
+          <End Role="Delivery" Type="Self.Delivery" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Delivery">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="deliveryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsLink_ToDetailsVflue">
+          <End Role="DetailsValue" Type="Self.DetailsValue" Multiplicity="1" />
+          <End Role="DetailsLink" Type="Self.DetailsLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetailsValue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsLink">
+              <PropertyRef Name="detailsValueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsLink_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="1" />
+          <End Role="DetailsLink" Type="Self.DetailsLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsLink">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetailsValue_ToDetailsType">
+          <End Role="DetailsType" Type="Self.DetailsType" Multiplicity="1" />
+          <End Role="DetailsValue" Type="Self.DetailsValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetailsType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DetailsValue">
+              <PropertyRef Name="detailsTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Visit_ToItem">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="Visit" Type="Self.Visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Visit">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Price_ToSupplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Price">
+              <PropertyRef Name="supplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CategoriesLink" EntityType="Self.CategoriesLink" />
+          <EntitySet Name="Category" EntityType="Self.Category" />
+          <EntitySet Name="Delivery" EntityType="Self.Delivery" />
+          <EntitySet Name="DetailsLink" EntityType="Self.DetailsLink" />
+          <EntitySet Name="DetailsType" EntityType="Self.DetailsType" />
+          <EntitySet Name="DetailsValue" EntityType="Self.DetailsValue" />
+          <EntitySet Name="Item" EntityType="Self.Item" />
+          <EntitySet Name="Order" EntityType="Self.Order" />
+          <EntitySet Name="Price" EntityType="Self.Price" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" />
+          <EntitySet Name="Visit" EntityType="Self.Visit" />
+          <AssociationSet Name="FK_CategoriesLink_ToCategoryChild" Association="Self.FK_CategoriesLink_ToCategoryChild">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoriesLink" EntitySet="CategoriesLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoriesLink_ToCategoryParent" Association="Self.FK_CategoriesLink_ToCategoryParent">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoriesLink" EntitySet="CategoriesLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ToCategory" Association="Self.FK_Item_ToCategory">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ToDelivery" Association="Self.FK_Order_ToDelivery">
+            <End Role="Delivery" EntitySet="Delivery" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsLink_ToDetailsVflue" Association="Self.FK_DetailsLink_ToDetailsVflue">
+            <End Role="DetailsValue" EntitySet="DetailsValue" />
+            <End Role="DetailsLink" EntitySet="DetailsLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsLink_ToItem" Association="Self.FK_DetailsLink_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="DetailsLink" EntitySet="DetailsLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetailsValue_ToDetailsType" Association="Self.FK_DetailsValue_ToDetailsType">
+            <End Role="DetailsType" EntitySet="DetailsType" />
+            <End Role="DetailsValue" EntitySet="DetailsValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ToItem" Association="Self.FK_Order_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Visit_ToItem" Association="Self.FK_Visit_ToItem">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="Visit" EntitySet="Visit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_ToSupplier" Association="Self.FK_Price_ToSupplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Price" EntitySet="Price" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище UniversalshopModelContainer" CdmEntityContainer="Entity">
+          <EntitySetMapping Name="CategoriesLink">
+            <EntityTypeMapping TypeName="UniversalshopModel.CategoriesLink">
+              <MappingFragment StoreEntitySet="CategoriesLink">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="parentId" ColumnName="parentId" />
+                <ScalarProperty Name="childId" ColumnName="childId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="UniversalshopModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Delivery">
+            <EntityTypeMapping TypeName="UniversalshopModel.Delivery">
+              <MappingFragment StoreEntitySet="Delivery">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetailsLink">
+            <EntityTypeMapping TypeName="UniversalshopModel.DetailsLink">
+              <MappingFragment StoreEntitySet="DetailsLink">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="detailsValueId" ColumnName="detailsValueId" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetailsType">
+            <EntityTypeMapping TypeName="UniversalshopModel.DetailsType">
+              <MappingFragment StoreEntitySet="DetailsType">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetailsValue">
+            <EntityTypeMapping TypeName="UniversalshopModel.DetailsValue">
+              <MappingFragment StoreEntitySet="DetailsValue">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="detailsTypeId" ColumnName="detailsTypeId" />
+                <ScalarProperty Name="title" ColumnName="title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Item">
+            <EntityTypeMapping TypeName="UniversalshopModel.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="partNumber" ColumnName="partNumber" />
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="image" ColumnName="image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order">
+            <EntityTypeMapping TypeName="UniversalshopModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="deliveryId" ColumnName="deliveryId" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="supplierTitle" ColumnName="supplierTitle" />
+                <ScalarProperty Name="supplierAddress" ColumnName="supplierAddress" />
+                <ScalarProperty Name="partNumber" ColumnName="partNumber" />
+                <ScalarProperty Name="supplierCaption" ColumnName="supplierCaption" />
+                <ScalarProperty Name="itemTitle" ColumnName="itemTitle" />
+                <ScalarProperty Name="itemImage" ColumnName="itemImage" />
+                <ScalarProperty Name="count" ColumnName="count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Price">
+            <EntityTypeMapping TypeName="UniversalshopModel.Price">
+              <MappingFragment StoreEntitySet="Price">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="partNumber" ColumnName="partNumber" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="count" ColumnName="count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Supplier">
+            <EntityTypeMapping TypeName="UniversalshopModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="caption" ColumnName="caption" />
+                <ScalarProperty Name="address" ColumnName="address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Visit">
+            <EntityTypeMapping TypeName="UniversalshopModel.Visit">
+              <MappingFragment StoreEntitySet="Visit">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

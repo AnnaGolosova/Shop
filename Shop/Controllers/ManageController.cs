@@ -11,7 +11,7 @@ using Shop.Models;
 namespace Shop.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -54,6 +54,7 @@ namespace Shop.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
+            SetOrderesCount();
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Ваш пароль изменен."
                 : message == ManageMessageId.SetPasswordSuccess ? "Пароль задан."
@@ -103,6 +104,7 @@ namespace Shop.Controllers
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
+            SetOrderesCount();
             return View();
         }
 
@@ -164,6 +166,7 @@ namespace Shop.Controllers
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
+            SetOrderesCount();
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
             // Отправка SMS через поставщик SMS для проверки номера телефона
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
@@ -217,6 +220,7 @@ namespace Shop.Controllers
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
+            SetOrderesCount();
             return View();
         }
 
@@ -248,6 +252,7 @@ namespace Shop.Controllers
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
+            SetOrderesCount();
             return View();
         }
 
@@ -280,6 +285,7 @@ namespace Shop.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
+            SetOrderesCount();
             ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "Внешнее имя входа удалено."
                 : message == ManageMessageId.Error ? "Произошла ошибка."
@@ -313,6 +319,7 @@ namespace Shop.Controllers
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
+            SetOrderesCount();
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {

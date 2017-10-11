@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Shop.Models.Category>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Категории</h2>
+@using (Html.BeginForm("DeleteSelectedCategories", "Admin"))
+{
+    <table class="table">
+        <tr>
+            <th>
+                <input type="checkbox" onchange="Check('xcx')" />
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <input type="checkbox" name="list" value="@item.id"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.ActionLink("Редактировать", "EditCategory", "Admin", new { id = item.id }, null) |
+                @Html.ActionLink("Удалить", "DeleteCategory", "Admin", new { id = item.id }, null)
+            </td>
+        </tr>
+    }
+    </table>
+    <input type="submit" value="Удалить выбранные"/>
+}
+<p>
+    @Html.ActionLink("Создать новую категорию", "CreateCategory")
+</p>
+
+<script>
+    var j = 0;
+    function Check()
+    {
+        var cksM = window.document.getElementsByName("list");
+        if(j == 0)
+        {
+            for (var i = cksM.length - 1; i >= 0; i--)
+                cksM[i].checked = "v";
+            j = 1;
+        }else
+        {
+            for (var i = cksM.length - 1; i >= 0; i--)
+                cksM[i].checked = "";
+            j = 0;
+        }
+    }
+</script>

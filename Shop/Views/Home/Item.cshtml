@@ -1,0 +1,55 @@
+﻿@model Shop.Models.ItemWithInfo
+@using Shop.Models
+@{
+    if (Model != null)
+    {
+        ViewBag.Title = Model.Item.title;
+    }
+    else
+    {
+        ViewBag.Title = "Товар не найден";
+    }
+}
+
+@if (Model != null)
+{
+    @Html.BeginForm("InBug", "Buy")
+    {
+        <h2>@Model.Item.title</h2>
+        <img src="/Files/@Model.Item.image" />
+        <p>Артикул - @Html.DisplayFor(m => m.Item.partNumber)</p>
+        <p>Описание - @Html.DisplayFor(m => m.Item.description)</p>
+        <p>Категория - @Html.DisplayFor(m => m.Item.Category.title)</p>
+        <p>Характеристики</p>
+        <table>
+            @foreach (DetailsLink d in Model.DetailsLink)
+            {
+                <tr>
+                    <td>@d.DetailsValue.DetailsType.title</td>
+                    <td>@d.DetailsValue.title</td>
+                </tr>
+            }
+        </table>
+        <p>Поставщики</p>
+        <table>
+            @foreach (Price p in Model.Price)
+            {
+                <tr>
+                    <td>@p.partNumber</td>
+                    <td>@p.Supplier.title</td>
+                    <td>@p.price</td>
+                    <td>@p.count</td>
+                    <td>@Html.ActionLink("Купить", "BuyItem", "Buy", new { itemId = Model.Item.id, priceId = p.id }, null)</td>
+                    <td>@Html.ActionLink("В корзину", "InBag", "Buy", new { itemId = Model.Item.id, priceId = p.id }, null)</td>
+                </tr>
+            }
+        </table>
+    }
+}
+else
+{
+    <h2>Товар не найден!</h2>
+
+}
+
+

@@ -1,0 +1,85 @@
+﻿@model List<Shop.Models.Order>
+@using Shop.Models
+@{
+    List<ItemWithInfo> items = ViewBag.Items;
+}
+<div>
+    <h4>Оформление заказа</h4>
+    <hr />
+    <dl class="dl-horizontal">
+    </dl>
+</div>
+<p>
+@using (Html.BeginForm("OnOrder", "Buy"))
+{
+    if (Model != null && Model.Count != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    <span>Артикул</span>
+                </th>
+                <th>
+                    <span>Наименование</span>
+                </th>
+                <th>
+                    <span>Поставщик</span>
+                </th>
+                <th>
+                    <span>Способ доставки</span>
+                </th>
+                <th>
+                    <span>Цена за еденицу товара</span>
+                </th>
+                <th>
+                    <span>Количество</span>
+                </th>
+                <th>
+                    <span>Выберите способ доставки</span>
+                </th>
+            </tr>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.partNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.itemTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.supplierTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Delivery.title)
+                    </td>
+                    <td>
+                        @(order.price)
+                    </td>
+                    <td>
+                        <input name="orderId" value="@order.id" type="hidden" />
+                        <input type="number" min="1" max="@items.Where(i => i.Item.id == order.itemId).First().Price.Where(p => p.partNumber == order.partNumber && String.Compare(p.Supplier.title, order.supplierTitle) == 0).FirstOrDefault().count"
+                                step="1" name="count" value="1">
+                    </td>
+                    <td>
+                        <select name="deliveries">
+                            @foreach (Delivery d in ViewBag.Deliveries)
+                            {
+                                <option value="@d.id" name ="deliveries">@d.title</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </table>
+        if(!User.Identity.IsAuthenticated)
+        {
+            <span>Введите имя</span>
+            <input name="name" type="text" required />
+            <span>Введите адрес электронной почты</span>
+            <input name="email" type="email" required />
+        }
+        <input type="submit" value="Подтвердить заказ" />
+    }
+}
+</p>

@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Заказы";
+    List<Shop.Models.Order>
+    orders = ViewBag.Orders;
+}
+@if (orders != null)
+    {
+    <table class="table">
+        <tr>
+            <th>
+                <span>Дата</span>
+            </th>
+            <th>
+                <span>Артикул</span>
+            </th>
+            <th>
+                <span>Наименование</span>
+            </th>
+            <th>
+                <span>Поставщик</span>
+            </th>
+            <th>
+                <span>Способ доставки</span>
+            </th>
+            <th>
+                <span>Цена за еденицу товара</span>
+            </th>
+            <th>
+                <span>Количество</span>
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        @foreach (var order in orders)
+        {
+        <tr>
+            <td>
+                @order.date.Value.Day-@order.date.Value.Month-@order.date.Value.Year
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.partNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.itemTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.supplierTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.Delivery.title)
+            </td>
+            <td>
+                @(order.price*order.count)
+            </td>
+            <td>
+                @order.count
+            </td>
+        </tr>
+        }
+    </table>
+}
+else
+{
+    <p>У Вас нет активных заказов</p>
+    @Html.ActionLink("Перейти к корзине", "Cart", "Buy", null, null);
+}

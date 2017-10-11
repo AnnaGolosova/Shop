@@ -1,4 +1,11 @@
 ﻿@using Microsoft.AspNet.Identity
+@{
+    float count = 0;
+    if (ViewBag.OrdersCount != null)
+    {
+        count = (float)ViewBag.OrdersCount;
+    }
+}
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -6,6 +13,9 @@
     @Html.AntiForgeryToken()
 
     <ul class="nav navbar-nav navbar-right">
+        <li>
+            <button type="button" class="btn nav navbar-right"><span class='glyphicon glyphicon-shopping-cart'></span> @Html.ActionLink(String.Format("{0:F2}", count), "Cart", "Buy", routeValues: null, htmlAttributes: null)</button>
+        </li>
         <li>
             @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
@@ -16,6 +26,9 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
+        <li>
+            <button type="button" class="btn nav navbar-right"><span class='glyphicon glyphicon-shopping-cart'></span> @Html.ActionLink(String.Format("{0:F2}", count), "Cart", "Buy", routeValues: null, htmlAttributes: null)</button>
+        </li>
         <li>@Html.ActionLink("Регистрация", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
         <li>@Html.ActionLink("Выполнить вход", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>

@@ -1,0 +1,103 @@
+﻿@model Shop.Models.Category
+@using Shop.Models
+@{
+    ViewBag.Title = "EditCategory";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Редактирование категории</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <table>
+                <tr>
+                    <th>
+                        <label>Выберите родительские категории   </label>
+                    </th>
+                    <th>
+                        <label>Выберите дочерние категории категории   </label>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            @{
+                                List<Category> Parents = ViewBag.Parents;
+                                List<Category> Children = ViewBag.Children;
+                            }
+                            @foreach (Shop.Models.Category category in ViewBag.Categories)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (category.id != Model.id)
+                                        {
+                                            if (Parents.Any(p => p.id == category.id))
+                                            {
+                                                <input type="checkbox" name="Parents" value="@category.id" checked/>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="Parents" value="@category.id" />
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        <label>@category.title</label>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+
+                            @foreach (Shop.Models.Category category in ViewBag.Categories)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (category.id != Model.id)
+                                        {
+                                            if (Children.Any(p => p.id == category.id))
+                                            {
+                                                <input type="checkbox" name="Children" value="@category.id" checked />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="Children" value="@category.id" />
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        <label>@category.title</label>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Сохранить" class="btn btn-default" />
+        </div>
+    </div>
+}

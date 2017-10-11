@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Shop.Global;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,11 +10,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Shop.Models;
+using System.Collections.Generic;
 
 namespace Shop.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -58,6 +60,8 @@ namespace Shop.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+
+            SetOrderesCount();
             return View();
         }
 
@@ -79,6 +83,16 @@ namespace Shop.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    SQLRepository repository = new SQLRepository();
+                    List<Order> OrderList = new List<Order>();
+                    if (Session["OrderList"] != null)
+                    {
+                        OrderList = (List<Order>)Session["OrderList"];
+                        string id = repository.GetUserId(model.Email);
+                        OrderList.ForEach(o => o.userId = id);
+                    }
+                    repository.AddOrder(OrderList);
+                    Session.Remove("OrderList");
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -139,6 +153,7 @@ namespace Shop.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            SetOrderesCount();
             return View();
         }
 
@@ -153,6 +168,7 @@ namespace Shop.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                UserManager.AddToRole(user.Id, UserRoles.user.ToString());
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);

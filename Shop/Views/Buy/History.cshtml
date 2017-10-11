@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "История";
+    List<Shop.Models.Order>
+    orders = ViewBag.Orders;
+}
+@if (orders != null && orders.Count != 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                <span>Артикул</span>
+            </th>
+            <th>
+                <span>Наименование</span>
+            </th>
+            <th>
+                <span>Поставщик</span>
+            </th>
+            <th>
+                <span>Способ доставки</span>
+            </th>
+            <th>
+                <span>Цена за еденицу товара</span>
+            </th>
+            <th>
+                <span>Количество</span>
+            </th>
+        </tr>
+        @foreach (var order in orders)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => order.partNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.itemTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.supplierTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Delivery.title)
+                </td>
+                <td>
+                    @(order.price * order.count)
+                </td>
+                <td>
+                    @order.count
+                </td>
+            </tr>
+        }
+    </table>
+} else
+{
+    <p>У Вас не было заказов.</p>
+    @Html.ActionLink("Перейти к каталогу", "Index", "Home", null, null);
+}
+

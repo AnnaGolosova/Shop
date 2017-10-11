@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="864813c0feda436ea48333bb41627869" Name="Diagram1">
+        <EntityTypeShape EntityType="UniversalshopModel.CategoriesLink" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Category" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Delivery" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.DetailsLink" Width="1.5" PointX="5.25" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.DetailsType" Width="1.5" PointX="1" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.DetailsValue" Width="1.5" PointX="3.5" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Item" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Order" Width="1.5" PointX="7.25" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Price" Width="1.5" PointX="6.625" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Supplier" Width="1.5" PointX="4.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="UniversalshopModel.Visit" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <AssociationConnector Association="UniversalshopModel.FK_CategoriesLink_ToCategoryChild" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_CategoriesLink_ToCategoryParent" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_Item_ToCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_Order_ToDelivery" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_DetailsLink_ToDetailsVflue" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_DetailsLink_ToItem" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_DetailsValue_ToDetailsType" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_Order_ToItem" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_Visit_ToItem" ManuallyRouted="false" />
+        <AssociationConnector Association="UniversalshopModel.FK_Price_ToSupplier" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Загрузить из файла";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Загрузить из файла</h2>
+<br />
+<p>Файл должен иметь вид:</p>
+<table>
+    <tr>
+        <th>
+            Артикул
+        </th>
+        <th>
+            Название категории (или код)
+        </th>
+        <th>
+            Название
+        </th>
+        <th>
+            Описание
+        </th>
+        <th>
+            Изображение
+        </th>
+    </tr>
+    <tr>
+        <td>
+            1004
+        </td>
+        <td>
+            5
+        </td>
+        <td>
+            Коньки
+        </td>
+        <td>
+            Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
+        </td>
+        <td>
+            NoImage.jpg
+        </td>
+    </tr>
+    <tr>
+        <td>
+            1005
+        </td>
+        <td>
+            Фитнесс
+        </td>
+        <td>
+            Коньки
+        </td>
+        <td>
+            Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
+        </td>
+        <td>
+            NoImage.jpg
+        </td>
+    </tr>
+    <br />
+</table>
+@using (Html.BeginForm("LoadCatalogOfItems", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="file" />
+    <input type="submit" value="Загрузить" />
+}
+

@@ -1,0 +1,107 @@
+﻿
+@using Shop.Models;
+@model string[]
+    @{
+        ViewBag.Title = "Catalog";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div>
+        <ol class="breadcrumb">
+            @foreach (Shop.Models.Category category in (List<Shop.Models.Category>)Session["NavRout"])
+            {
+                <li>@Html.ActionLink(category.title, "Catalog", "Home", new { categoryId = category.id, fromId = 0 }, null)</li>
+            }
+        </ol>
+
+        <div class="col-md-5">
+            <h3>Категории</h3>
+            <ul>
+                @{List<Category> list = (List<Category>
+                            )Session["NavRout"];
+                }
+                @if (list.Count() > 1)
+                {
+                    <li href=@("/Home/Catalog?categoryId=" + list.Last().id.ToString())>
+                        @list.Last().title
+                    </li>
+                }
+                <li>
+                    <ul>
+                        @foreach (Category r in ViewBag.Categories)
+                        {
+                            <li>
+                                <a href=@("/Home/Catalog?categoryId=" + r.id.ToString() + "&fromId =" + list.Last().id.ToString())>
+                                    @r.title
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+            </ul>
+            @{ 
+                List<DetailsTypeWithValues> m = ViewBag.Details;
+            }
+            <form action="/Home/SetFilters" method="post">
+                <ul>
+                    @for (int i = 0; i < m.Count(); i++)
+                    {
+                        <li>
+                            <label>@m[i].type.title</label>
+                            <ul>
+                            @for (int j = 0; j < m[i].values.Count(); j++)
+                            {
+                                <li>
+                                    <input type="checkbox" name="checkedValues" value="@m[i].values[j].value.id" checked="@m[i].values[j].inUse" />
+                                    <label>@m[i].values[j].value.title</label>
+                                </li>
+                            }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <input type="submit"/>
+            </form>
+            @{ 
+                Session["Items"] = ViewBag.Items;
+            }
+            @Html.ActionLink("Сохранить ", "PrintExcel", "Home", null)
+        </div>
+
+        <div class="col-md-7">
+            <h3>@list[list.Count() - 1].title</h3>
+            @foreach (ItemWithInfo i in ViewBag.Items)
+            {
+                <li>
+                    <a href="/Home/Item/@i.Item.id">
+                        <div style="width:159px; height:156px;align-content:cent er;">
+                            <img src="/images/@i.Item.image" class="img-responsive" alt="" />
+                        </div>
+                        @{
+                            string price = i.Price.Count() == 0 ?
+                                "Нет на складе" :
+                                i.Price.Min(p => p.price).ToString();
+                        }
+                        <span class="btn5">
+                            @price
+                            @if (i.Price.Count() != 0)
+                            {
+                                <text>(@i.Price.Count())</text>
+                            }
+                        </span>
+                        <p>@i.Item.title</p>
+                        @if (i.Item.Category != null)
+                        {
+                            <p>@i.Item.Category.title</p>
+                        }
+                    </a>
+                </li>
+            }
+        </div>
+    </div>
+
+
+
+
+

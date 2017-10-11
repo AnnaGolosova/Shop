@@ -1,0 +1,105 @@
+﻿@{
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+    List<Shop.Models.Order>
+    orders = ViewBag.Orders;
+}
+@using (Html.BeginForm("Search", "Admin"))
+{
+    <input type="text" name="value" />
+    <input type="submit" value="Поиск" />
+}
+<p><h2>Активные заказы</h2></p>
+@if(ViewBag.SearchParams != null)
+{
+    <span>@ViewBag.SearchParams @Html.ActionLink("x", "ClearSearchParams", "Admin")</span>
+}
+@using (Html.BeginForm("Orders", "Admin"))
+{
+    if (orders != null && orders.Count != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox" onchange="Check('xcx')" />
+                </th>
+                <th>
+                    <span>Дата</span>
+                </th>
+                <th>
+                    <span>Артикул</span>
+                </th>
+                <th>
+                    <span>Наименование</span>
+                </th>
+                <th>
+                    <span>Поставщик</span>
+                </th>
+                <th>
+                    <span>Способ доставки</span>
+                </th>
+                <th>
+                    <span>Цена за еденицу товара</span>
+                </th>
+                <th>
+                    <span>Количество</span>
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="list" value="@order.id" />
+                    </td>
+                    <td>
+                        @order.date.Value.Day-@order.date.Value.Month-@order.date.Value.Year
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.partNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.itemTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.supplierTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Delivery.title)
+                    </td>
+                    <td>
+                        @(order.price * order.count)
+                    </td>
+                    <td>
+                        @order.count
+                    </td>
+                </tr>
+            }
+        </table>
+        <input type="submit" value="Отметить заказы как доставленные" />
+    }
+    else
+    {
+        <p>Нет активных заказов</p>
+    }
+}
+
+<script>
+    var j = 0;
+    function Check()
+    {
+        var cksM = window.document.getElementsByName("list");
+        if(j == 0)
+        {
+            for (var i = cksM.length - 1; i >= 0; i--)
+                cksM[i].checked = "v";
+            j = 1;
+        }else
+        {
+            for (var i = cksM.length - 1; i >= 0; i--)
+                cksM[i].checked = "";
+            j = 0;
+        }
+    }
+</script>

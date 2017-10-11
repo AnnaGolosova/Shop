@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using Shop.Global;
 
 [assembly: OwinStartupAttribute(typeof(Shop.Startup))]
 namespace Shop

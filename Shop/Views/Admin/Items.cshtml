@@ -1,0 +1,76 @@
+﻿@model List<Shop.Models.ItemWithInfo>
+@{ 
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+<h1>Товары</h1>
+<p>
+    @Html.ActionLink("Создать новый товар", "CreateItem", "Admin")
+    @Html.ActionLink("Загрузить каталог товаров", "LoadCatalogOfItems", "Admin")
+</p>
+<hr />
+@if ((Model != null) && (Model.Count != 0))
+{
+    using (Html.BeginForm("DeleteRangeItems", "Admin"))
+    {
+    <table class="table">
+        <tr>
+            <th>
+                <input type="checkbox" onchange="Check('xcx')"/>
+            </th>
+            <th>
+                <span>Артикул</span>
+            </th>
+            <th>
+                <span>Наименование</span>
+            </th>
+            <th>
+                <span>Категория</span>
+            </th>
+            <th>
+
+            </th>
+        </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="list" value="@item.Item.id" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.partNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.Category.title)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Редактировать", "EditItem", new { id = item.Item.id }) |
+                        @Html.ActionLink("Просмотр товара", "Item", "Home", new { id = item.Item.id }, null) |
+                        @Html.ActionLink("Удалить", "DeleteItem", new { id = item.Item.id })
+                    </td>
+                </tr>
+            }
+    </table>
+    <input type="submit" value="Удалить выбранные" />
+        }
+}
+<script>
+    var j = 0;
+    function Check()
+    {
+        var cksM = window.document.getElementsByName("list");
+        if(j == 0)
+        {
+            for (var i = cksM.length - 1; i >= 0; i--) 
+                cksM[i].checked = "v"; 
+            j = 1;
+        }else
+        {
+            for (var i = cksM.length - 1; i >= 0; i--) 
+                cksM[i].checked = "";
+            j = 0;
+        }
+    }
+</script>
