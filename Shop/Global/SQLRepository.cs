@@ -421,6 +421,12 @@ namespace Shop.Global
             // errors!
         }
 
+        public void AddItems(List<Item>items)
+        {
+            foreach (Item i in items)
+                AddItem(i);
+        } 
+
         public void DeleteCategory(int id)
         {
 

@@ -248,39 +248,59 @@ namespace Shop.Controllers
         public ActionResult LoadCatalogOfItems(HttpPostedFileBase file)
         {
             List<Item> list = new List<Item>();
+            List<bool> results = new List<bool>();
 
             Excel.Application newApp = new Excel.Application();
             Excel.Workbook xlsBook = null;
+            file.SaveAs(Server.MapPath("~/Files/" + file.FileName));
+            xlsBook = newApp.Workbooks.Open(Server.MapPath("~/Files/" + file.FileName));
+            Excel._Worksheet xlsSheet = xlsBook.Sheets[1];
+            Excel.Range xlRange = xlsSheet.UsedRange;
             try
             {
-                file.SaveAs(Server.MapPath("~/Files/" + file.FileName));
-                xlsBook = newApp.Workbooks.Open(Server.MapPath("~/Files/" + file.FileName));
-                Excel._Worksheet xlsSheet = xlsBook.Sheets[1];
-                Excel.Range xlRange = xlsSheet.UsedRange;
-
                 int rowCount = xlRange.Rows.Count;
+                bool isCorrect = false;
                 for(int i = 1; i <= rowCount; i++)
                 {
-                    string partNumber = xlRange.Cells.Item[i][1].Value;
-                    string cathegoryId = xlRange.Cells.Item[i][2].Value;
-                    string title = xlRange.Cells.Item[i][3].Value;
-                    string description = xlRange.Cells.Item[i][4].Value;
-                    string image = xlRange.Cells.Item[i][5].Value;
+                    string partNumber = xlRange.Cells.Item[1][i].Value.ToString();
+                    string cathegoryId = xlRange.Cells.Item[2][i].Value.ToString();
+                    string title = xlRange.Cells.Item[3][i].Value.ToString();
+                    string description = xlRange.Cells.Item[4][i].Value.ToString();
+                    string image = xlRange.Cells.Item[5][i].Value.ToString();
 
                     if (String.Compare(partNumber, "") == 0)
                         break;
+                    isCorrect = false;
+                    Item item = new Item();
+                    try
+                    {
+                        int pN = 0;
+                        if (!int.TryParse(partNumber, out pN))
+                            break;
+                        item.partNumber = pN;
 
+                        int cId = 0;
+                        if (!int.TryParse(cathegoryId, out cId))
+                            break;
 
+                        if (repository.GetCategory(cId) != null)
+                            item.categoryId = cId;
+                        else break;
+                        item.title = title;
+                        item.description = description;
+                        item.image = image;
+
+                        list.Add(item);
+                        isCorrect = true;
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+                    results.Add(isCorrect);
                 }
-                string s = xlRange.Cells.Item[1][1].Value;
 
-                /*
-            Артикул
-            Код Категории
-            Название
-            Описание
-            Изображение
-                  */
+                repository.AddItems(list);
             }
             finally
             {
@@ -288,6 +308,9 @@ namespace Shop.Controllers
                     xlsBook.Close();
                 newApp.Quit();
             }
+            //ViewBag.CorrectFlags = results;
+            //ViewBag.Cells = xlRange;
+
             ViewBag.Title = "Создание категории";
             ViewBag.isRedactorView = true;
             return View();

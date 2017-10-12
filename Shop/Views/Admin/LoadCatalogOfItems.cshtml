@@ -1,4 +1,6 @@
-﻿
+﻿@model List<Shop.Models.Item>
+@using Excel = Microsoft.Office.Interop.Excel;
+@using Shop.Models
 @{
     ViewBag.Title = "Загрузить из файла";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -6,7 +8,10 @@
 
 <h2>Загрузить из файла</h2>
 <br />
-<p>Файл должен иметь вид:</p>
+@if (ViewBag.CorrectFlags != null)
+{
+    <p>Файл должен иметь вид:</p>
+}
 <table>
     <tr>
         <th>
@@ -25,40 +30,55 @@
             Изображение
         </th>
     </tr>
-    <tr>
-        <td>
-            1004
-        </td>
-        <td>
-            5
-        </td>
-        <td>
-            Коньки
-        </td>
-        <td>
-            Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
-        </td>
-        <td>
-            NoImage.jpg
-        </td>
-    </tr>
-    <tr>
-        <td>
-            1005
-        </td>
-        <td>
-            Фитнесс
-        </td>
-        <td>
-            Коньки
-        </td>
-        <td>
-            Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
-        </td>
-        <td>
-            NoImage.jpg
-        </td>
-    </tr>
+    @if (ViewBag.CorrectFlags == null)
+    {
+        <tr>
+            <td>
+                1004
+            </td>
+            <td>
+                5
+            </td>
+            <td>
+                Коньки
+            </td>
+            <td>
+                Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
+            </td>
+            <td>
+                NoImage.jpg
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1005
+            </td>
+            <td>
+                Фитнесс
+            </td>
+            <td>
+                Коньки
+            </td>
+            <td>
+                Seamlessly procrastinate high-quality process improvements vis-a-vis 2.0 platforms. Quickly orchestrate competitive initiatives without extensible.
+            </td>
+            <td>
+                NoImage.jpg
+            </td>
+        </tr>
+
+    }
+    else
+    {
+        {Excel.Range range = ViewBag.Cells;
+        }
+        //for (int i = 1; i <= range.Cells.Rows.Count; i++)
+        {
+            <tr>
+                <td></td>
+            </tr>
+        }
+    }
     <br />
 </table>
 @using (Html.BeginForm("LoadCatalogOfItems", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
