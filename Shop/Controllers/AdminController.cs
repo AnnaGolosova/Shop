@@ -3,9 +3,15 @@ using Shop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Globalization;
+using System.Diagnostics;
+using System.Collections;
 
 namespace Shop.Controllers
 {
@@ -19,7 +25,7 @@ namespace Shop.Controllers
             ViewBag.Title = "Админ панель";
             ViewBag.Orders = repository.GetOrders();
 
-            ViewBag.isRedactorView = true;
+            //ViewBag.isRedactorView = true;
             return View();
         }
 
@@ -247,72 +253,110 @@ namespace Shop.Controllers
         [HttpPost]
         public ActionResult LoadCatalogOfItems(HttpPostedFileBase file)
         {
-            List<Item> list = new List<Item>();
-            List<bool> results = new List<bool>();
-
-            Excel.Application newApp = new Excel.Application();
             Excel.Workbook xlsBook = null;
-            file.SaveAs(Server.MapPath("~/Files/" + file.FileName));
-            xlsBook = newApp.Workbooks.Open(Server.MapPath("~/Files/" + file.FileName));
-            Excel._Worksheet xlsSheet = xlsBook.Sheets[1];
-            Excel.Range xlRange = xlsSheet.UsedRange;
+            Excel.Workbooks xlsBooks = null;
+            Excel.Application newApp = null;
+            Excel._Worksheet xlsSheet = null;
+            Hashtable myHashtable  = null;
             try
             {
+
+                Process[] AllProcesses = Process.GetProcessesByName("excel");
+                myHashtable = new Hashtable();
+                int iCount = 0;
+
+                foreach (Process ExcelProcess in AllProcesses)
+                {
+                    myHashtable.Add(ExcelProcess.Id, iCount);
+                    iCount = iCount + 1;
+                }
+
+                List<Item> list = new List<Item>();
+                List<bool> results = new List<bool>();
+                List<List<string>> values = new List<List<string>>();
+
+                newApp = new Excel.Application();
+                file.SaveAs(Server.MapPath("~/Files/" + file.FileName));
+                xlsBooks = newApp.Workbooks;
+                xlsBook = xlsBooks.Open(Server.MapPath("~/Files/" + file.FileName));
+                xlsSheet = xlsBook.Sheets[1];
+                Excel.Range xlRange = xlsSheet.UsedRange;
                 int rowCount = xlRange.Rows.Count;
-                bool isCorrect = false;
                 for(int i = 1; i <= rowCount; i++)
                 {
-                    string partNumber = xlRange.Cells.Item[1][i].Value.ToString();
-                    string cathegoryId = xlRange.Cells.Item[2][i].Value.ToString();
-                    string title = xlRange.Cells.Item[3][i].Value.ToString();
-                    string description = xlRange.Cells.Item[4][i].Value.ToString();
-                    string image = xlRange.Cells.Item[5][i].Value.ToString();
+                    values.Add(new List<string>());
+                    if (xlRange.Cells.Item[1][i] != null)
+                        values[i - 1].Add(xlRange.Cells.Item[1][i].Value.ToString());
+                    else values[i - 1].Add(String.Empty);
+                    if (xlRange.Cells[2][i].Value != null)
+                        values[i - 1].Add(xlRange.Cells[2][i].Value.ToString());
+                    else values[i - 1].Add(String.Empty);
+                    if (xlRange.Cells[3][i].Value != null)
+                        values[i - 1].Add(xlRange.Cells.Item[3][i].Value.ToString());
+                    else values[i - 1].Add(String.Empty);
+                    if (xlRange.Cells[4][i].Value != null)
+                        values[i - 1].Add(xlRange.Cells.Item[4][i].Value.ToString());
+                    else values[i - 1].Add(String.Empty);
+                    if (xlRange.Cells[5][i].Value != null)
+                        values[i - 1].Add(xlRange.Cells.Item[5][i].Value.ToString());
+                    else values[i - 1].Add(String.Empty);
 
-                    if (String.Compare(partNumber, "") == 0)
+                    if (String.Compare(values[i-1][0], "") == 0)
                         break;
-                    isCorrect = false;
+                    results.Add(false);
                     Item item = new Item();
-                    try
+                    int pN = 0;
+                    if (!int.TryParse(values[i - 1][0], out pN))
+                        continue;
+                    item.partNumber = pN;
+
+                    int cId = 0;
+                    if (int.TryParse(values[i - 1][1], out cId))
                     {
-                        int pN = 0;
-                        if (!int.TryParse(partNumber, out pN))
-                            break;
-                        item.partNumber = pN;
-
-                        int cId = 0;
-                        if (!int.TryParse(cathegoryId, out cId))
-                            break;
-
                         if (repository.GetCategory(cId) != null)
                             item.categoryId = cId;
-                        else break;
-                        item.title = title;
-                        item.description = description;
-                        item.image = image;
+                    }
+                    else if (repository.GetCategories().Any(c => String.Compare(c.title, values[i - 1][1]) == 0))
+                            item.categoryId = repository.GetCategories()
+                                .Where(c => String.Compare(c.title, values[i - 1][1]) == 0).FirstOrDefault().id;
+                    else continue;
+                    item.title = values[i - 1][2];
+                    item.description = values[i - 1][3];
+                    item.image = values[i - 1][4];
 
-                        list.Add(item);
-                        isCorrect = true;
-                    }
-                    catch (Exception)
-                    {
-                        //
-                    }
-                    results.Add(isCorrect);
+                    results[results.Count - 1] = true;
+                    list.Add(item);
                 }
 
                 repository.AddItems(list);
+                ViewBag.CorrectFlags = results;
+
+                ViewBag.Cells = values;
+
+                ViewBag.Title = "Создание категории";
+                ViewBag.isRedactorView = true;
+                return View(values);
             }
             finally
             {
-                if(xlsBook != null)
-                    xlsBook.Close();
-                newApp.Quit();
-            }
-            //ViewBag.CorrectFlags = results;
-            //ViewBag.Cells = xlRange;
+                Process[] AllProcesses = Process.GetProcessesByName("excel");
 
-            ViewBag.Title = "Создание категории";
-            ViewBag.isRedactorView = true;
+                // check to kill the right process
+                foreach (Process ExcelProcess in AllProcesses)
+                {
+                    if (myHashtable.ContainsKey(ExcelProcess.Id) == false)
+                        ExcelProcess.Kill();
+                }
+
+                AllProcesses = null;
+            }
+        }
+
+        public ActionResult Statistic()
+        {
+
+
+
             return View();
         }
     }

@@ -1,4 +1,4 @@
-﻿@model List<Shop.Models.Item>
+﻿@model List<List<string>>
 @using Excel = Microsoft.Office.Interop.Excel;
 @using Shop.Models
 @{
@@ -8,7 +8,7 @@
 
 <h2>Загрузить из файла</h2>
 <br />
-@if (ViewBag.CorrectFlags != null)
+@if (ViewBag.CorrectFlags == null)
 {
     <p>Файл должен иметь вид:</p>
 }
@@ -30,7 +30,7 @@
             Изображение
         </th>
     </tr>
-    @if (ViewBag.CorrectFlags == null)
+    @if (ViewBag.CorrectFlags == null || Model == null || Model.Count == 0)
     {
         <tr>
             <td>
@@ -70,12 +70,14 @@
     }
     else
     {
-        {Excel.Range range = ViewBag.Cells;
-        }
-        //for (int i = 1; i <= range.Cells.Rows.Count; i++)
+        for (int i = 0; i < Model.Count; i++)
         {
-            <tr>
-                <td></td>
+            <tr style="background-color: @(ViewBag.CorrectFlags[i] ? "green" : "red")">
+                <td>@Model[i][0]</td>
+                <td>@Model[i][1]</td>
+                <td>@Model[i][2]</td>
+                <td>@Model[i][3]</td>
+                <td>@Model[i][4]</td>
             </tr>
         }
     }
