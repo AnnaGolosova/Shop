@@ -1,0 +1,48 @@
+﻿@model Shop.Models.StatisticParamsForSend
+@using Shop.Models
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @using (Html.BeginForm())
+        {
+            <input name="ContentState" value="1" type="hidden">
+            <p>С @Html.EditorFor(m => m.StartDate, new { @class = "datafield", type = "date"})</p>
+            <p>По @Html.EditorFor(m => m.EndDate, new { @class = "datafield", type = "date"})</p>
+            <select name="categoryId">
+                @if (Model.categoryId == 0)
+                {
+                    <option name="categoryId" checked="true" value="0">Все</option>
+                }
+                else
+                {
+                    <option name="categoryId" value="0">Все</option>
+                }
+                @foreach (Category c in ViewBag.Categories)
+                {
+                    if (Model.categoryId == c.id)
+                    {
+                        <option name="categoryId" checked="true" value=@c.id>@c.title</option>
+                    }
+                    else
+                    {
+                        <option name="categoryId" value="@c.id">@c.title</option>
+                    }
+                }
+            </select>
+            <input type="submit" value="Показать" />
+        }
+    </div>
+    <div class="col-md-9">
+        <div>
+            <img src="@Url.Action("CreateChart", "Chart")" />
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(".datafield").datapicker();
+    })
+</script>

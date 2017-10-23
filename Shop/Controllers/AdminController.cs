@@ -351,13 +351,5 @@ namespace Shop.Controllers
                 AllProcesses = null;
             }
         }
-
-        public ActionResult Statistic()
-        {
-
-
-
-            return View();
-        }
     }
 }

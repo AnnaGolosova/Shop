@@ -385,6 +385,50 @@ namespace Shop.Global
             return db.Order.Where(o => o.state == (int)OrderState.OnOrder).AsNoTracking().ToList();
         }
 
+        public List<Tuple<int, string>> GetStatistic(StatisticParamsForSend Params)
+        {
+            const int N = 30;
+            long h = -(Params.StartDate.Ticks - Params.EndDate.Ticks) / N;
+            DateTime fromDate = new DateTime(Params.StartDate.Year, Params.StartDate.Month, Params.StartDate.Day,
+                0, 0, 0);
+            DateTime toDate = new DateTime(Params.StartDate.Year, Params.StartDate.Month, Params.StartDate.Day,
+                0, 0, 0);
+            List<Tuple<int, string>> returnList = new List<Tuple<int, string>>();
+            switch (Params.ContentState)
+            {
+                case (int)StatisticContent.Order:
+                    List<Order> orderList = db.Order.AsNoTracking().Where(o => o.date <= Params.EndDate && o.date >= Params.StartDate)
+                        .ToList();
+                    if (Params.categoryId != 0)
+                        orderList = orderList.Where(o => o.Item.categoryId == Params.categoryId).OrderBy(o => o.date).ToList();
+                    while(toDate <= Params.EndDate)
+                    {
+                        returnList.Add(new Tuple<int, string>(orderList.Where(o => o.date >= fromDate && o.date < toDate)
+                            .Count(), fromDate.Date.ToShortDateString()));
+                        toDate = fromDate;
+                        fromDate = fromDate.AddTicks(h);
+                    }
+                    break;
+                case (int)StatisticContent.Item:
+                    while (toDate <= Params.EndDate)
+                    {
+                        fromDate = toDate;
+                        toDate = toDate.AddTicks(h);
+                        int count = db.Visit.AsNoTracking().Where(v => v.date < toDate && v.date >= fromDate && (Params.categoryId == 0 ? true : v.Item.categoryId == Params.categoryId))
+                        .Select(v => v.Item).Count();
+                        returnList.Add(new Tuple<int, string>(count, fromDate.Date.ToShortDateString()));
+                    }
+
+                    break;
+                case (int)StatisticContent.Supplier:
+                    List<Supplier> supplierList = db.Order.AsNoTracking().Where(v => v.date <= Params.EndDate && v.date >= Params.StartDate && (Params.categoryId != 0 ? v.Item.categoryId == Params.categoryId : true))
+                        .Select(v => db.Price.Where(s => s.partNumber == v.partNumber).Select(p => p.Supplier).FirstOrDefault()).ToList();
+                    break;
+            }
+
+            return returnList;
+        }
+
         public List<Order> SearchOrders(string value, int orderState = -1)
         {
             List<Order> or =  db.Order.AsNoTracking().Where(o => (o.Item.title.Contains(value)) || (o.Item.description.Contains(value))).ToList();
